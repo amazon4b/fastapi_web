@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>LIST PAGE</h1>
+    
+    <table>
+        <tr>
+            <thead>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Desc</th>
+                <th>Author</th>
+                <th>Create_at</th>
+                <th>Etc.</th>
+            </thead>
+        </tr>
+        {% for data in list %}
+        <tr>
+            <td>{{ data['_id'] }}</td>
+            <td><a href="/details/{{ data['_id'] }}">{{ data['title'] }}</a></td>
+            <!-- <td>{{ data['desc'] }}</td> -->
+            <td>{{ data['author'] }}</td>
+            <td class="time">{{ data['create_at'] }}</td>
+                       
+        </tr>
+        {% endfor %}
+        <tr>
+            <tfoot>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Desc</th>
+                <th>Author</th>
+                <th>Create_at</th>
+                <th>Etc.</th>
+            </tfoot>
+        </tr>
+    </table>
+    
+</body>
+</html>

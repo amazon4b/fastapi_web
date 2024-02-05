@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pymongo import MongoClient
 from passlib.hash import pbkdf2_sha256
+from data import Articles
+from bson.objectid import ObjectId
 
 app = FastAPI()
 
@@ -53,7 +55,7 @@ async def login_page_view(request: Request):
     return templates.TemplateResponse(request=request, name="register.html")
 
 @app.post('/register',  response_class=HTMLResponse)
-async def login(request: Request, username:str=Form(...) ,
+async def login(request: Request, username:str=Form(...),
                 email:str=Form(...),
                 phone:str=Form(...),
                 password:str=Form(...)):
@@ -73,6 +75,45 @@ async def login(request: Request, username:str=Form(...) ,
 
     else:
         return templates.TemplateResponse(request=request,name="register.html" )
+
+@app.get('/list', response_class=HTMLResponse)
+async def list(request: Request):
+    # results = Articles()
+    result_list = []
+    lists = db.lists
+    results = lists.find()
+    for i in results:
+        result_list.append(i)
+    return templates.TemplateResponse(request=request,name="list.html", context={"list":result_list})
+
+@app.get('/create_list', response_class=HTMLResponse)
+async def create_list(request: Request):
+    return templates.TemplateResponse(request=request,name="create_list.html")
+
+import datetime
+
+@app.post('/create_list',  response_class=HTMLResponse)
+async def create(request: Request, 
+                 title:str=Form(...),
+                 desc:str=Form(...),
+                 author:str=Form(...)
+                 ):
+    lists = db.lists
+    result = lists.insert_one({
+            "title":title,
+            "desc":desc,
+            "author":author,
+            "create_at":datetime.datetime.now()
+        })
+    print(result)
+    return "SUCESS"
+
+@app.get('/details/{id}', response_class=HTMLResponse)
+async def details(request: Request, id):
+    lists = db.lists
+    result = lists.find_one({"_id":ObjectId(id)})
+    print(result)
+    return templates.TemplateResponse(request=request,name="details.html", context={"detail":result})
 
 
 
