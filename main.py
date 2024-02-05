@@ -107,6 +107,7 @@ async def create(request: Request,
         })
     print(result)
     return "SUCESS"
+    
 
 @app.get('/details/{id}', response_class=HTMLResponse)
 async def details(request: Request, id):
